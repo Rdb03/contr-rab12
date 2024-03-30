@@ -1,15 +1,31 @@
 import express from "express";
 import User from "../models/User";
 import mongoose from "mongoose";
+import * as crypto from "crypto";
 import {randomUUID} from "crypto";
 import auth, {RequestWithUser} from "../middleware/auth";
 import {OAuth2Client} from "google-auth-library";
 import config from "../config";
 import {imagesUpload} from "../multer";
-import * as crypto from 'crypto';
+import Post from "../models/Post";
 
 const usersRouter = express.Router();
 const client = new OAuth2Client(config.google.clientId);
+
+usersRouter.get('/:id', async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+
+        if (!user) {
+            return res.status(404).send({ error: "User not found!" });
+        }
+
+        return res.send(user);
+    } catch (error) {
+        console.error(error);
+        return res.sendStatus(500);
+    }
+});
 
 usersRouter.post('/google', async (req, res, next) => {
     try {

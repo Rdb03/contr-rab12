@@ -18,9 +18,6 @@ const PostsMain = () => {
         dispatch(fetchPosts());
     }, [dispatch]);
 
-    console.log(posts);
-    console.log(user);
-
     return (
         <Grid sx={{display: 'flex', flexDirection: 'column'}}>
             <Typography variant="h1" sx={{color: 'white', margin: '0 auto'}}>

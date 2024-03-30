@@ -32,7 +32,6 @@ const PostItem: React.FC<Props> = ({post}) => {
             width: 345,
             display: 'flex',
             flexDirection: 'column',
-            cursor: 'pointer',
         }}>
             <CardActionArea component={Link} to={'/cocktails/' + post._id}>
                 <Grid sx={{display: 'flex', alignItems: 'center'}}>
@@ -46,6 +45,11 @@ const PostItem: React.FC<Props> = ({post}) => {
                     : null
                 }
             </CardActionArea>
+            <Link to={`/posts?user=${post.user._id}`}
+                  style={{color: 'black', marginTop: '30px', width: '60px'}}
+            >
+                <Typography sx={{fontWeight: 'bold', color: 'black'}}>{post.user.displayName}</Typography>
+            </Link>
             <Grid sx={{display: 'flex', alignItems: 'center', marginTop: '20px'}}>
                 {user?.role === 'admin' ?
                     <Button

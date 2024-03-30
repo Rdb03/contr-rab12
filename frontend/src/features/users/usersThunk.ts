@@ -5,6 +5,15 @@ import {RootState} from "../../app/store";
 import axiosApi from "../../../axiosApi.ts";
 import {GlobalError, IUser, LoginMutation, RegisterMutation, RegisterResponse, ValidationError} from "../../../types";
 
+
+export const fetchOneUser = createAsyncThunk<IUser, string>(
+    'cocktails/fetchOneCocktail',
+    async (id) => {
+        const response = await axiosApi.get<IUser>('/users/' + id);
+        return response.data;
+    }
+);
+
 export const register = createAsyncThunk<
     RegisterResponse,
     RegisterMutation,
