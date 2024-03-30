@@ -89,7 +89,7 @@ postRouter.patch(
     },
 );
 
-postRouter.delete("/:id", auth, permit("admin"), async (req, res, next) => {
+postRouter.delete("/:id", auth, async (req, res, next) => {
     try {
         const post_id = req.params.id;
         const post = await Post.findOne({ _id: post_id });
