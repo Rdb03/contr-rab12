@@ -27,10 +27,10 @@ const PostsUser = () => {
     }, [dispatch, userId]);
 
     useEffect(() => {
-        if (user && userId) {
+        if (userId) {
             dispatch(fetchOneUser(userId));
         }
-    }, [dispatch, user, userId]);
+    }, [dispatch, userId]);
 
     const onClose = () => {
         setModal(false);
