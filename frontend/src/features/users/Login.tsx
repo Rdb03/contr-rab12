@@ -50,7 +50,7 @@ const Login = () => {
     };
     return (
         <>
-            {loading ? <Container component="main" maxWidth="xs">
+            {!loading ? <Container component="main" maxWidth="xs">
                 <Box
                     style={{
                         marginTop: 8,

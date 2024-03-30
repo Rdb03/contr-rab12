@@ -16,9 +16,10 @@ const ImageCardMedia = styled(CardMedia)({
 
 interface Props {
     post: IPosts;
+    modal: () => void;
 }
 
-const PostItem: React.FC<Props> = ({post}) => {
+const PostItem: React.FC<Props> = ({post, modal}) => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectUser);
@@ -44,8 +45,11 @@ const PostItem: React.FC<Props> = ({post}) => {
             const token = user.token;
             await dispatch(patchPost({ id: post._id, token }));
             await dispatch(fetchPosts());
+            navigate('/');
         }
     };
+
+    console.log(post);
 
     return (
         <Card sx={{
@@ -55,14 +59,14 @@ const PostItem: React.FC<Props> = ({post}) => {
             display: 'flex',
             flexDirection: 'column',
         }}>
-            <CardActionArea component={Link} to={'/cocktails/' + post._id}>
+            <CardActionArea onClick={modal}>
                 <Grid sx={{display: 'flex', alignItems: 'center'}}>
                     <Typography sx={{fontWeight: 'bold'}} variant="h5">{post.name}</Typography>
                 </Grid>
                 <ImageCardMedia image={cardImage} title={post.name}/>
                 {!post.published && user && user._id === post.user._id ?
                     <Typography sx={{fontSize: '11px', color: 'red', marginLeft: 'auto'}}>
-                        Ваш коктейль находится на рассмотрении модератора
+                        Ваш пост находится на рассмотрении модератора
                     </Typography>
                     : null
                 }
@@ -73,7 +77,7 @@ const PostItem: React.FC<Props> = ({post}) => {
                 <Typography sx={{fontWeight: 'bold', color: 'black'}}>{post.user.displayName}</Typography>
             </Link>
             <Grid sx={{display: 'flex', alignItems: 'center', marginTop: '20px'}}>
-                {user?.role === 'admin' ?
+                {user?.role === 'admin' || post.user._id === user?._id ?
                     <Button
                         onClick={postDelete}
                         variant="contained"

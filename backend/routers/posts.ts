@@ -92,9 +92,9 @@ postRouter.patch(
 postRouter.delete("/:id", auth, permit("admin"), async (req, res, next) => {
     try {
         const post_id = req.params.id;
-        const cocktail = await Post.findOne({ _id: post_id });
+        const post = await Post.findOne({ _id: post_id });
 
-        if (!cocktail) {
+        if (!post) {
             return res.status(404).send({ error: "Not found!" });
         }
 
@@ -108,5 +108,6 @@ postRouter.delete("/:id", auth, permit("admin"), async (req, res, next) => {
         return next(error);
     }
 });
+
 
 export default postRouter;
