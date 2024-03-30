@@ -21,10 +21,10 @@ const PostsUser = () => {
     const [modalImage, setModalImage] = useState('');
 
     useEffect(() => {
-        if (user && userId) {
+        if (userId) {
             dispatch(fetchPosts(userId));
         }
-    }, [dispatch, user, userId]);
+    }, [dispatch, userId]);
 
     useEffect(() => {
         if (user && userId) {
