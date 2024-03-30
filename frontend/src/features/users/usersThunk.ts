@@ -7,7 +7,7 @@ import {GlobalError, IUser, LoginMutation, RegisterMutation, RegisterResponse, V
 
 
 export const fetchOneUser = createAsyncThunk<IUser, string>(
-    'cocktails/fetchOneCocktail',
+    'users/fetchOneUser',
     async (id) => {
         const response = await axiosApi.get<IUser>('/users/' + id);
         return response.data;

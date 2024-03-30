@@ -25,6 +25,9 @@ export interface PostMutation {
     image: File| null,
     user: string,
 }
+export interface OnePost {
+    result: IPosts;
+}
 
 export interface RegisterResponse {
     user: IUser;

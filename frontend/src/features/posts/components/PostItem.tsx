@@ -1,11 +1,13 @@
 import {IPosts} from "../../../../types";
 import React from "react";
 import {Button, Card, CardActionArea, CardMedia, Grid, styled, Typography} from "@mui/material";
-import {Link} from "react-router-dom";
-import {useAppSelector} from "../../../app/hooks.ts";
+import {Link, useNavigate} from "react-router-dom";
+import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
 import {selectUser} from "../../users/usersSlice.ts";
 import {apiURL} from "../../../../constants.ts";
 import imageNotAvailable from '../../../assets/images/image_not_available.png';
+import {deletePost, fetchPosts, patchPost} from "../postsThunk.ts";
+import {selectDeleteLoading, selectPatchLoading} from "../postsSlice.ts";
 
 const ImageCardMedia = styled(CardMedia)({
     height: 0,
@@ -16,14 +18,34 @@ interface Props {
     post: IPosts;
 }
 
-
 const PostItem: React.FC<Props> = ({post}) => {
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     const user = useAppSelector(selectUser);
     let cardImage = imageNotAvailable;
+    const deleteLoading = useAppSelector(selectDeleteLoading);
+    const patchLoading = useAppSelector(selectPatchLoading);
 
     if (post.image) {
         cardImage = apiURL + '/' + post.image;
     }
+
+    const postDelete = async () => {
+        if(user) {
+            const token = user.token;
+            await dispatch(deletePost({ id: post._id, token }));
+            await dispatch(fetchPosts());
+            navigate('/');
+        }
+    };
+
+    const postPatch = async () => {
+        if(user) {
+            const token = user.token;
+            await dispatch(patchPost({ id: post._id, token }));
+            await dispatch(fetchPosts());
+        }
+    };
 
     return (
         <Card sx={{
@@ -53,14 +75,18 @@ const PostItem: React.FC<Props> = ({post}) => {
             <Grid sx={{display: 'flex', alignItems: 'center', marginTop: '20px'}}>
                 {user?.role === 'admin' ?
                     <Button
+                        onClick={postDelete}
                         variant="contained"
                         color="error"
+                        disabled={deleteLoading ? deleteLoading === post._id : false}
                     >Delete
                     </Button> : null}
                 {user?.role === 'admin' && !post.published ? <Button
                     variant="contained"
                     sx={{marginLeft: '10px'}}
                     color="success"
+                    disabled={patchLoading ? patchLoading === post._id : false}
+                    onClick={postPatch}
                    >
                     Published
                 </Button> : null}
