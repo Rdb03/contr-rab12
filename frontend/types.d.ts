@@ -20,6 +20,12 @@ export interface IPosts {
     published: boolean;
 }
 
+export interface PostMutation {
+    name: string,
+    image: File| null,
+    user: string,
+}
+
 export interface RegisterResponse {
     user: IUser;
     message: string;

@@ -38,7 +38,7 @@ const PostsUser = () => {
             <Grid sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                 <Typography sx={{color: 'white'}} variant="h3">{oneUser?.displayName} Gallery</Typography>
                 {userId === user?._id ?     <Link
-                    to={`/newCocktail`}
+                    to={`/new_post`}
                     style={{
                         color: 'black',
                         textDecoration: 'none',
