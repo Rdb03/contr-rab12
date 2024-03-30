@@ -1,84 +1,78 @@
-import mongoose, {HydratedDocument} from "mongoose";
-import bcrypt from "bcrypt";
-import {randomUUID} from "crypto";
-import {UserFields, UserMethods, UserModel} from "../types";
-
+import bcrypt from 'bcrypt';
+import { randomUUID } from 'crypto';
+import { HydratedDocument, model, Model, Schema } from 'mongoose';
+import { IUser } from '../types';
 
 const SALT_WORK_FACTOR = 10;
 
-const Schema = mongoose.Schema;
+interface IUserMethods {
+    checkPassword(password: string): Promise<boolean>;
 
-const UserSchema = new Schema<UserFields, UserModel, UserMethods>({
-   email: {
-       type: String,
-        required: true,
-       unique: true,
-       validate: {
-           validator: async function (
-               this: HydratedDocument<UserFields>,
-               email: string,
-               ): Promise<boolean> {
-               if(!this.isModified('email')) return true;
+    generateToken(): void;
+}
 
-               const user: HydratedDocument<UserFields> | null = await User.findOne({
-                   email,
-               });
+type UserModel = Model<IUser, {}, IUserMethods>;
 
-               return !user;
-           },
-           message: "This user is already registered."
-       }
-   },
-    password: {
-       type: String,
-        required: true,
-    },
-    token: {
-       type: String,
-        required: true,
-    },
-    role: {
+const UserSchema = new Schema<IUser, UserModel, IUserMethods>({
+    email: {
         type: String,
         required: true,
-        enum: ['user', 'admin'],
-        default: 'user'
+        unique: true,
+        validate: {
+            validator: async function (this: HydratedDocument<IUser>, email: string) {
+                if (!this.isModified('email')) return true;
+                const user = await User.findOne({ email });
+
+                if (user) return false;
+            },
+            message: 'This user is already registered',
+        },
     },
     displayName: {
         type: String,
         required: true,
     },
-    image: {
-       type: String,
+    role: {
+        type: String,
+        required: true,
+        default: 'user',
+        enum: ['user', 'admin'],
+    },
+    password: {
+        type: String,
+        required: true,
+    },
+    token: {
+        type: String,
         required: true,
     },
     googleID: String,
 });
 
-UserSchema.methods.checkPassword = function(password: string) {
-    return bcrypt.compare(password, this.password);
-};
-
-UserSchema.methods.generateToken = function () {
-  this.token = randomUUID();
-};
-
 UserSchema.pre('save', async function (next) {
-    if(!this.isModified('password')) {
-        return next();
-    }
+    if (!this.isModified('password')) return next();
 
     const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
     this.password = await bcrypt.hash(this.password, salt);
+
     next();
 });
 
 UserSchema.set('toJSON', {
-   transform: (_doc, ret, _options) => {
-       delete ret.password;
-       return ret;
-   }
+    transform: (doc, ret) => {
+        delete ret.password;
+        return ret;
+    },
 });
 
-const User = mongoose.model<UserFields, UserModel>('User', UserSchema);
+UserSchema.methods.checkPassword = function (password) {
+    return bcrypt.compare(password, this.password);
+};
+
+UserSchema.methods.generateToken = function () {
+    this.token = randomUUID();
+};
+
+const User = model<IUser, UserModel>('User', UserSchema);
 
 export default User;
