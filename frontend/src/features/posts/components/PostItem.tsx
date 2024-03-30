@@ -49,8 +49,6 @@ const PostItem: React.FC<Props> = ({post, modal}) => {
         }
     };
 
-    console.log(post);
-
     return (
         <Card sx={{
             border: '1px solid black',
