@@ -1,8 +1,8 @@
 import mongoose, {HydratedDocument} from "mongoose";
 import bcrypt from "bcrypt";
-
 import {randomUUID} from "crypto";
 import {UserFields, UserMethods, UserModel} from "../types";
+
 
 const SALT_WORK_FACTOR = 10;
 
