@@ -9,6 +9,19 @@ export interface IUser {
     googleID?: string;
 }
 
+export interface IPost extends Document{
+    user: Schema.Types.ObjectId;
+    name: string;
+    image: string;
+    published: boolean;
+}
+
+interface IPostUser  {
+    user: string;
+    name: string;
+    image: string;
+}
+
 export interface UserFields {
     email: string,
     password: string,
