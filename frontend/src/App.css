@@ -1,6 +1,6 @@
 body {
-  background: rgb(115,12,50);
-  background: radial-gradient(circle, rgba(115,12,50,1) 5%, rgba(13,12,12,1) 60%);
+  background: rgb(236, 9, 94);
+  background: radial-gradient(circle, rgb(241, 90, 137) 5%, rgb(136, 75, 75) 60%);
   min-height: 100vh;
 }
 

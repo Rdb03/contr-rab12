@@ -30,7 +30,7 @@ const UserMenu: React.FC<Props> = ({ user }) => {
                 Hello, {user.displayName}
             </Button>
             <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
-                <MenuItem><Link style={{textDecoration: 'none', color:'black'}} to='/my_cocktails'>My gallery</Link></MenuItem>
+                <Link to={`/posts?user=${user._id}`} style={{color: 'black', textDecoration: 'none'}}>My gallery</Link>
                 <MenuItem onClick={goOut}>Logout</MenuItem>
             </Menu>
         </>

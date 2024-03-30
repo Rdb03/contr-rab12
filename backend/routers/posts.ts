@@ -1,4 +1,3 @@
-import User from "../models/User";
 import express from "express";
 import Post from "../models/Post";
 import mongoose from "mongoose";
@@ -9,27 +8,19 @@ import permit from "../middleware/permit";
 
 const postRouter = express.Router();
 
-postRouter.get('/', async (req, res) => {
+postRouter.get('/', async (req , res, next) => {
     try {
-        const token = req.get('Authorization');
-        const user = await User.findOne({ token });
+        const user = req.query.user as string;
 
-        if (user && req.query.user) {
-            const result = await Post.find({ user: req.query.user })
-                .populate('user', 'displayName');
+        if(user && req.query.user) {
+            const result = await Post.find({user: req.query.user}).populate('user', 'displayName');
             return res.send(result);
         }
 
-        if (user && user.role === 'admin') {
-            const result = await Post.find().populate('user', 'displayName');
-            return res.send(result);
-        }
-
-        const cocktails = await Post.find({ published: true }).populate('user', 'displayName');
-        return res.send(cocktails);
-
-    } catch {
-        return res.sendStatus(500);
+        const posts = await Post.find();
+        return res.send(posts);
+    } catch (e) {
+        next(e);
     }
 });
 

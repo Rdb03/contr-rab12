@@ -9,6 +9,17 @@ export interface IUser {
     googleID?: string;
 }
 
+export interface IPosts {
+    _id: string;
+    name: string;
+    user: {
+        _id: string;
+        displayName: string;
+    };
+    image: string;
+    published: boolean;
+}
+
 export interface RegisterResponse {
     user: IUser;
     message: string;
